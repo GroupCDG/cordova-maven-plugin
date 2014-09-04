@@ -35,7 +35,7 @@ public class GenerateMojoTest {
 
 	private static final String CORDOVA_PLUGIN_NAME = "cordova-maven-plugin";
 
-	private static final String ASSETS_TARGET = "target/generated-resources/cordova/www";
+	private static final String ASSETS_TARGET = "target/generated-sources/cordova/www";
 
 	private static final File DEFAULT_PROJECT = new File("src/test/resources/unit/default");
 

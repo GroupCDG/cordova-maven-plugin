@@ -22,6 +22,7 @@ import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -79,9 +80,10 @@ public class GenerateMojo extends AbstractCordovaMojo {
 	}
 
 	private void create(final File outputDirectory, final File resourcesDirectory) throws IOException, InterruptedException {
+		MavenProject project = getProject();
 		run(new ProcessBuilder(getCommand(), CREATE, outputDirectory.getAbsolutePath(),
-				getProject().getGroupId() + '.' + getProject().getArtifactId(),
-				getName().replaceAll("\\s", "_"),
+				project.getGroupId() + '.' + project.getArtifactId(),
+				getEscapedName(),
 				"--src=" + resourcesDirectory.getAbsolutePath()), GENERATE);
 	}
 

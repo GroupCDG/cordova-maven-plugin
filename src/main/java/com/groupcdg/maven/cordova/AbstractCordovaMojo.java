@@ -57,7 +57,7 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	@Parameter(property = "name", defaultValue = "${project.name}", required = true)
 	private String name;
 
-	@Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/generated-resources/cordova", required = true)
+	@Parameter(property = "outputDirectory", defaultValue = "${project.build.directory}/generated-sources/cordova", required = true)
 	private File outputDirectory;
 
 	@Parameter(property = "fileSets")
@@ -113,6 +113,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	protected String getName() {
 		return name;
+	}
+
+	protected String getEscapedName() {
+		return getName().replaceAll("\\s", "_");
 	}
 
 	protected File getOutputDirectory() {
