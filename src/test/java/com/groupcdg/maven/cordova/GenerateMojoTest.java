@@ -55,7 +55,11 @@ public class GenerateMojoTest {
 
 	@Test
 	public void testDefaultGeneration() throws Exception {
-		FileUtils.cleanDirectory(new File(DEFAULT_PROJECT, "target"));
+		File target = new File(DEFAULT_PROJECT, "target");
+		if (target.exists()) {
+			FileUtils.cleanDirectory(target);
+		}
+
 		rule.configureMojo(new GenerateMojo(), CORDOVA_PLUGIN_NAME, pom(DEFAULT_PROJECT));
 		rule.executeMojo(DEFAULT_PROJECT, GENERATE_GOAL);
 
@@ -65,7 +69,11 @@ public class GenerateMojoTest {
 
 	@Test
 	public void testCustomResourcesGeneration() throws Exception {
-		FileUtils.cleanDirectory(new File(CUSTOM_RESOURCES_PROJECT, "target"));
+		File target = new File(CUSTOM_RESOURCES_PROJECT, "target");
+		if (target.exists()) {
+			FileUtils.cleanDirectory(target);
+		}
+
 		rule.configureMojo(new GenerateMojo(), CORDOVA_PLUGIN_NAME, pom(CUSTOM_RESOURCES_PROJECT));
 		rule.executeMojo(CUSTOM_RESOURCES_PROJECT, GENERATE_GOAL);
 

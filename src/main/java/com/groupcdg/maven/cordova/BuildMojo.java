@@ -13,15 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.groupcdg.maven.cordova;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-
-import java.io.File;
-import java.io.IOException;
 
 
 @Mojo(name = "build", defaultPhase = LifecyclePhase.PACKAGE)
@@ -47,9 +47,8 @@ public class BuildMojo extends AbstractCordovaMojo {
 		}
 	}
 
-
-
 	private void build(final File outputDirectory) throws IOException, InterruptedException {
-		run(new ProcessBuilder(getCommand(), BUILD).directory(outputDirectory), BUILD);
+		
+		run(createProcessBuilder(outputDirectory, getCommand(), BUILD), BUILD);
 	}
 }

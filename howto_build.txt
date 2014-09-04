@@ -1,0 +1,43 @@
+cordova-maven-plugin
+====================
+
+Apache Cordova Maven Plugin requires the Cordova Command-Line tool to be installed in order to
+perform the build.
+
+To install the Cordova Command-Line tool, follow these steps:
+
+1, Download and install Node.js from http://nodejs.org/. 
+Following installation, you should be able to invoke node and npm on your command line. 
+If desired, you may optionally use a tool such as nvm or nave to manage your Node.js installation.
+
+2, Download and install a git client, if you don't already have one. 
+Following installation, you should be able to invoke git on your command line. Even though you 
+won't be using git manually, the CLI does use it behind-the-scenes to download some assets when 
+creating a new project.
+
+3. Install the cordova module using npm utility of Node.js. The cordova module will automatically 
+be downloaded by the npm utility.
+
+On OS X and Linux:
+
+$ sudo npm install -g cordova
+
+On OS X and Linux, prefixing the npm command with sudo may be necessary to install this development 
+utility in otherwise restricted directories such as /usr/local/share. 
+If you are using the optional nvm/nave tool or have write access to the install directory, you may 
+be able to omit the sudo prefix. There are more tips available on using npm without sudo, if you 
+desire to do that.
+
+On Windows:
+
+C:\>npm install -g cordova
+
+The -g flag above tells npm to install cordova globally. Otherwise it will be installed in the 
+node_modules subdirectory of the current working directory.
+
+You may need to add the npm directory to your PATH in order to invoke globally installed npm modules. 
+On Windows, npm can usually be found at C:\Users\username\AppData\Roaming\npm. On OS X and Linux it 
+can usually be found at /usr/local/share/npm.
+
+Following installation, you should be able to run cordova on the command line with no arguments and 
+it should print help text.

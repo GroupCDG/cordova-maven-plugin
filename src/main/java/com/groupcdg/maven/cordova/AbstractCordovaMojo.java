@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.groupcdg.maven.cordova;
 
 import org.apache.maven.model.FileSet;
@@ -26,6 +25,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 public abstract class AbstractCordovaMojo extends AbstractMojo {
 
@@ -39,8 +39,6 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	private static final String ERR_LOG_SUFFIX = ".err";
 
 	private static final String COMMAND_MESSAGE_PREFIX = "Running: ";
-
-
 
 	@Parameter(defaultValue = "${project.build.directory}/cordova", required = true, readonly = true)
 	private File cordovaDirectory;
@@ -70,9 +68,7 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	private List<String> plugins;
 
 	private final Log log = getLog();
-
-
-
+	
 	public void setProject(MavenProject project) {
 		this.project = project;
 	}
@@ -100,8 +96,6 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	public void setPlugins(List<String> plugins) {
 		this.plugins = plugins;
 	}
-
-
 
 	protected MavenProject getProject() {
 		return project;
@@ -167,5 +161,36 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 				.redirectOutput(out.exists() ? ProcessBuilder.Redirect.appendTo(out) : ProcessBuilder.Redirect.to(out))
 				.redirectError(err.exists() ? ProcessBuilder.Redirect.appendTo(err) : ProcessBuilder.Redirect.to(err))
 				.start().waitFor();
+	}
+	
+	protected static final ProcessBuilder createProcessBuilder(File directory, String ... commands) {
+		
+		ProcessBuilder pb = createProcessBuilder(commands).directory(directory);
+		
+		return pb;
+	}
+	
+	protected static final ProcessBuilder createProcessBuilder(String ... commands) {
+
+		boolean isWindows = System.getProperty("os.name").startsWith("Windows");
+		
+		final ProcessBuilder pb;
+		if (isWindows) {
+			String[] windowsCommands = new String[commands.length + 2];
+			windowsCommands[0] = "cmd";
+			windowsCommands[1] = "/c";
+			for (int i = 0; i < commands.length; i++) {
+				windowsCommands[2+i] = commands[i];
+			}
+			pb = new ProcessBuilder(windowsCommands);
+		} else {
+			pb = new ProcessBuilder(commands);
+		}
+		Map<String, String> env = pb.environment();
+		if (System.getenv() != null)  {
+		   env.putAll(System.getenv());
+		}
+		
+		return pb;
 	}
 }

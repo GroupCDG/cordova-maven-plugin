@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.groupcdg.maven.cordova;
 
 import org.apache.commons.io.filefilter.IOFileFilter;
@@ -22,7 +21,6 @@ import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
-import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
@@ -50,8 +48,6 @@ public class GenerateMojo extends AbstractCordovaMojo {
 
 	private static final String GENERATE_RESOURCES_ERROR_MESSAGE = "Failed to generate resources";
 
-
-
 	public void execute() throws MojoExecutionException {
 		try {
 			final File outputDirectory = getOutputDirectory();
@@ -67,8 +63,6 @@ public class GenerateMojo extends AbstractCordovaMojo {
 		}
 	}
 
-
-
 	private File prepare() throws IOException {
 		File resourcesDirectory = new File(getCordovaDirectory(), RESOURCES_DIRECTORY);
 		resourcesDirectory.mkdir();
@@ -80,21 +74,20 @@ public class GenerateMojo extends AbstractCordovaMojo {
 	}
 
 	private void create(final File outputDirectory, final File resourcesDirectory) throws IOException, InterruptedException {
-		MavenProject project = getProject();
-		run(new ProcessBuilder(getCommand(), CREATE, outputDirectory.getAbsolutePath(),
-				project.getGroupId() + '.' + project.getArtifactId(),
+		run(createProcessBuilder(getCommand(), CREATE, outputDirectory.getAbsolutePath(),
+				getProject().getGroupId() + '.' + getProject().getArtifactId(),
 				getEscapedName(),
 				"--src=" + resourcesDirectory.getAbsolutePath()), GENERATE);
 	}
 
 	private void addPlatforms(final File outputDirectory) throws IOException, InterruptedException {
 		for(String platform : getPlatforms())
-			run(new ProcessBuilder(getCommand(), PLATFORM, ADD, platform).directory(outputDirectory), GENERATE);
+			run(createProcessBuilder(outputDirectory, getCommand(), PLATFORM, ADD, platform), GENERATE);
 	}
 
 	private void addPlugins(final File outputDirectory) throws IOException, InterruptedException {
 		for(String plugin : getPlugins())
-			run(new ProcessBuilder(getCommand(), PLUGIN, ADD, plugin).directory(outputDirectory), GENERATE);
+			run(createProcessBuilder(outputDirectory, getCommand(), PLUGIN, ADD, plugin), GENERATE);
 	}
 
 	private IOFileFilter createFilter(final FileSet fileSet) {
