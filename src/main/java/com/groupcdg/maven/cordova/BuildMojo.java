@@ -17,7 +17,6 @@ package com.groupcdg.maven.cordova;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Map;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
