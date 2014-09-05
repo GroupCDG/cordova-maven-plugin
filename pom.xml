@@ -27,7 +27,7 @@
 	<version>0.1.1-SNAPSHOT</version>
 
 	<name>Apache Cordova Maven Plugin</name>
-	<url>http://dev.groupcdg.com/docs/cordova-maven-plugin</url>
+	<url>https://dev.groupcdg.com/docs/cordova-maven-plugin</url>
 	<description>Plugin for Building Cordova Assembly</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -71,7 +71,7 @@
 	
 	<ciManagement>
 		<system>jenkins</system>
-		<url>http://ci.groupcdg.com/</url>
+		<url>https://ci.groupcdg.com/</url>
 	</ciManagement>
 	
 	<!--
@@ -118,17 +118,17 @@
   	<distributionManagement>
   	  	<site>
   	  	  	<id>groupcdg-maven-sites</id>
-  	  	  	<url>scp://http://dev.groupcdg.com/var/www/dev/docs/cordova-maven-plugin/</url>
+  	  	  	<url>scp://dev.groupcdg.com/var/www/dev/docs/cordova-maven-plugin/</url>
   	  	  	<name>cordova-maven-plugin Maven Site</name>
   	  	</site>
 		<repository>
 			<id>groupcdg-nexus-releases</id>
-			<url>http://repo.groupcdg.com/content/repositories/public-releases/</url>
+			<url>https://repo.groupcdg.com/content/repositories/public-releases/</url>
 			<name>Nexus Release Repository</name>
 		</repository>
 		<snapshotRepository>
 			<id>groupcdg-nexus-snapshots</id>
-			<url>http://repo.groupcdg.com/content/repositories/public-snapshots/</url>
+			<url>https://repo.groupcdg.com/content/repositories/public-snapshots/</url>
 			<name>Sonatype Nexus Snapshots</name>
 		</snapshotRepository>
   	</distributionManagement>
@@ -551,7 +551,7 @@
 							<artifactId>findbugs-maven-plugin</artifactId> 
 							<version>3.0.0</version>
 							<configuration>
-								 <includeFilterFile>http://sonar.groupcdg.com/profiles/export?format=findbugs&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</includeFilterFile>
+								 <includeFilterFile>https://sonar.groupcdg.com/profiles/export?format=findbugs&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</includeFilterFile>
 							</configuration>
 						</plugin>
 						<plugin>
@@ -563,7 +563,7 @@
 								<charset>${project.build.sourceEncoding}</charset>
 								<enableRulesSummary>false</enableRulesSummary>
 								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
-								<configLocation>http://sonar.groupcdg.com/profiles/export?format=checkstyle&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</configLocation>
+								<configLocation>https://sonar.groupcdg.com/profiles/export?format=checkstyle&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</configLocation>
 							</configuration>
 						</plugin>
 						<plugin>
@@ -574,7 +574,7 @@
 								<targetJdk>1.7</targetJdk>
 								<minimumTokens>20</minimumTokens>
 								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
-									<ruleset>http://sonar.groupcdg.com/profiles/export?format=pmd&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</ruleset>
+									<ruleset>https://sonar.groupcdg.com/profiles/export?format=pmd&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</ruleset>
 							</configuration>
 						</plugin>
 						-->
