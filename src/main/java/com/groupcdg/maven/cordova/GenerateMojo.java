@@ -48,6 +48,8 @@ public class GenerateMojo extends AbstractCordovaMojo {
 
 	private static final String GENERATE_RESOURCES_ERROR_MESSAGE = "Failed to generate resources";
 
+
+
 	public void execute() throws MojoExecutionException {
 		try {
 			final File outputDirectory = getOutputDirectory();
@@ -58,10 +60,12 @@ public class GenerateMojo extends AbstractCordovaMojo {
 			create(outputDirectory, prepare());
 			addPlatforms(outputDirectory);
 			addPlugins(outputDirectory);
-		} catch (IOException | InterruptedException e) {
+		} catch (IOException e) {
 			throw new MojoExecutionException(GENERATE_RESOURCES_ERROR_MESSAGE, e);
 		}
 	}
+
+
 
 	private File prepare() throws IOException {
 		File resourcesDirectory = new File(getCordovaDirectory(), RESOURCES_DIRECTORY);
@@ -73,19 +77,19 @@ public class GenerateMojo extends AbstractCordovaMojo {
 		return resourcesDirectory;
 	}
 
-	private void create(final File outputDirectory, final File resourcesDirectory) throws IOException, InterruptedException {
+	private void create(final File outputDirectory, final File resourcesDirectory) throws MojoExecutionException {
 		run(createProcessBuilder(getCommand(), CREATE, outputDirectory.getAbsolutePath(),
 				getProject().getGroupId() + '.' + getProject().getArtifactId(),
 				getEscapedName(),
 				"--src=" + resourcesDirectory.getAbsolutePath()), GENERATE);
 	}
 
-	private void addPlatforms(final File outputDirectory) throws IOException, InterruptedException {
+	private void addPlatforms(final File outputDirectory) throws MojoExecutionException {
 		for(String platform : getPlatforms())
 			run(createProcessBuilder(outputDirectory, getCommand(), PLATFORM, ADD, platform), GENERATE);
 	}
 
-	private void addPlugins(final File outputDirectory) throws IOException, InterruptedException {
+	private void addPlugins(final File outputDirectory) throws MojoExecutionException {
 		for(String plugin : getPlugins())
 			run(createProcessBuilder(outputDirectory, getCommand(), PLUGIN, ADD, plugin), GENERATE);
 	}

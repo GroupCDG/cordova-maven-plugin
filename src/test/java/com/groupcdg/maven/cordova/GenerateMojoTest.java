@@ -31,9 +31,9 @@ import static org.junit.Assert.assertTrue;
 
 public class GenerateMojoTest {
 
-	private static final String GENERATE_GOAL = "generate";
+	private static final String PLUGIN_NAME = "cordova-maven-plugin";
 
-	private static final String CORDOVA_PLUGIN_NAME = "cordova-maven-plugin";
+	private static final String GENERATE_GOAL = "generate";
 
 	private static final String ASSETS_TARGET = "target/generated-sources/cordova/www";
 
@@ -56,11 +56,9 @@ public class GenerateMojoTest {
 	@Test
 	public void testDefaultGeneration() throws Exception {
 		File target = new File(DEFAULT_PROJECT, "target");
-		if (target.exists()) {
-			FileUtils.cleanDirectory(target);
-		}
+		if (target.exists()) FileUtils.cleanDirectory(target);
 
-		rule.configureMojo(new GenerateMojo(), CORDOVA_PLUGIN_NAME, pom(DEFAULT_PROJECT));
+		rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(DEFAULT_PROJECT));
 		rule.executeMojo(DEFAULT_PROJECT, GENERATE_GOAL);
 
 		assertIncluded(asset(DEFAULT_PROJECT, "index.html"), DEFAULT_ASSET_CONTENT);
@@ -70,18 +68,15 @@ public class GenerateMojoTest {
 	@Test
 	public void testCustomResourcesGeneration() throws Exception {
 		File target = new File(CUSTOM_RESOURCES_PROJECT, "target");
-		if (target.exists()) {
-			FileUtils.cleanDirectory(target);
-		}
+		if (target.exists()) FileUtils.cleanDirectory(target);
 
-		rule.configureMojo(new GenerateMojo(), CORDOVA_PLUGIN_NAME, pom(CUSTOM_RESOURCES_PROJECT));
+		rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(CUSTOM_RESOURCES_PROJECT));
 		rule.executeMojo(CUSTOM_RESOURCES_PROJECT, GENERATE_GOAL);
 
 		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "index.html"), CUSTOM_ASSET_CONTENT);
 		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "css/style.css"), CUSTOM_ASSET_CONTENT);
 		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "other.html"), OVERRIDEN_ASSET_CONTENT);
 		assertExcluded(asset(CUSTOM_RESOURCES_PROJECT, "excluded.txt"));
-
 	}
 
 

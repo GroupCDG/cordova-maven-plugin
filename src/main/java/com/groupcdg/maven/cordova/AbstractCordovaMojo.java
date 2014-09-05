@@ -17,6 +17,7 @@ package com.groupcdg.maven.cordova;
 
 import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.AbstractMojo;
+import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.project.MavenProject;
@@ -32,6 +33,31 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	protected static final String CREATE_DIRECTORY_ERROR_MESSAGE = "Could not create directory ";
 
 
+	protected static final ProcessBuilder createProcessBuilder(File directory, String ... commands) {
+		return createProcessBuilder(commands).directory(directory);
+	}
+
+	protected static final ProcessBuilder createProcessBuilder(String ... commands) {
+		final ProcessBuilder pb;
+
+		if (System.getProperty("os.name").startsWith("Windows")) {
+			String[] windowsCommands = new String[commands.length + 2];
+			windowsCommands[0] = "cmd";
+			windowsCommands[1] = "/c";
+			System.arraycopy(commands, 0, windowsCommands, 2, commands.length);
+			pb = new ProcessBuilder(windowsCommands);
+		} else {
+			pb = new ProcessBuilder(commands);
+		}
+		Map<String, String> env = pb.environment();
+		if (System.getenv() != null)  {
+			env.putAll(System.getenv());
+		}
+
+		return pb;
+	}
+
+
 	private static final String LOGS_DIRECTORY = "logs";
 
 	private static final String OUT_LOG_SUFFIX = ".out";
@@ -39,6 +65,8 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	private static final String ERR_LOG_SUFFIX = ".err";
 
 	private static final String COMMAND_MESSAGE_PREFIX = "Running: ";
+
+
 
 	@Parameter(defaultValue = "${project.build.directory}/cordova", required = true, readonly = true)
 	private File cordovaDirectory;
@@ -68,7 +96,7 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	private List<String> plugins;
 
 	private final Log log = getLog();
-	
+
 	public void setProject(MavenProject project) {
 		this.project = project;
 	}
@@ -139,13 +167,30 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		return cordovaDirectory;
 	}
 
-	protected File getLogsDirectory() {
+	protected void run(ProcessBuilder processBuilder, String goal) throws MojoExecutionException {
+		final File out = new File(getLogsDirectory(), goal + OUT_LOG_SUFFIX);
+		final File err = new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX);
+
+		try {
+			notifyError(logCommand(processBuilder)
+					.redirectOutput(out.exists() ? ProcessBuilder.Redirect.appendTo(out) : ProcessBuilder.Redirect.to(out))
+					.redirectError(err.exists() ? ProcessBuilder.Redirect.appendTo(err) : ProcessBuilder.Redirect.to(err))
+					.start().waitFor(), goal);
+		} catch (IOException | InterruptedException e) {
+			throw new MojoExecutionException(new StringBuilder("Failed to execute ")
+					.append(goal).append(" goal.").toString(), e);
+		}
+	}
+
+
+
+	private File getLogsDirectory() {
 		File logsDirectory = new File(getCordovaDirectory(), LOGS_DIRECTORY);
 		logsDirectory.mkdirs();
 		return logsDirectory;
 	}
 
-	protected ProcessBuilder logCommand(ProcessBuilder processBuilder) {
+	private ProcessBuilder logCommand(ProcessBuilder processBuilder) {
 		if(log.isInfoEnabled()) {
 			StringBuilder sb = new StringBuilder(COMMAND_MESSAGE_PREFIX);
 			for(String s : processBuilder.command()) sb.append(' ').append(s);
@@ -154,43 +199,9 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		return processBuilder;
 	}
 
-	protected int run(ProcessBuilder processBuilder, String goal) throws InterruptedException, IOException {
-		final File out = new File(getLogsDirectory(), goal + OUT_LOG_SUFFIX);
-		final File err = new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX);
-		return logCommand(processBuilder)
-				.redirectOutput(out.exists() ? ProcessBuilder.Redirect.appendTo(out) : ProcessBuilder.Redirect.to(out))
-				.redirectError(err.exists() ? ProcessBuilder.Redirect.appendTo(err) : ProcessBuilder.Redirect.to(err))
-				.start().waitFor();
-	}
-	
-	protected static final ProcessBuilder createProcessBuilder(File directory, String ... commands) {
-		
-		ProcessBuilder pb = createProcessBuilder(commands).directory(directory);
-		
-		return pb;
-	}
-	
-	protected static final ProcessBuilder createProcessBuilder(String ... commands) {
-
-		boolean isWindows = System.getProperty("os.name").startsWith("Windows");
-		
-		final ProcessBuilder pb;
-		if (isWindows) {
-			String[] windowsCommands = new String[commands.length + 2];
-			windowsCommands[0] = "cmd";
-			windowsCommands[1] = "/c";
-			for (int i = 0; i < commands.length; i++) {
-				windowsCommands[2+i] = commands[i];
-			}
-			pb = new ProcessBuilder(windowsCommands);
-		} else {
-			pb = new ProcessBuilder(commands);
-		}
-		Map<String, String> env = pb.environment();
-		if (System.getenv() != null)  {
-		   env.putAll(System.getenv());
-		}
-		
-		return pb;
+	private void notifyError(int errorCode, String goal) throws MojoExecutionException {
+		if(errorCode != 0) throw new MojoExecutionException(new StringBuilder("Failed to execute ")
+				.append(goal).append(" goal. Details of the error can be found at ")
+				.append(new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX).getAbsolutePath()).toString());
 	}
 }

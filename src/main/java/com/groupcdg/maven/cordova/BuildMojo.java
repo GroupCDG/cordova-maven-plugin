@@ -15,13 +15,11 @@
  */
 package com.groupcdg.maven.cordova;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.Map;
-
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+
+import java.io.File;
 
 
 @Mojo(name = "build", defaultPhase = LifecyclePhase.PACKAGE)
@@ -30,25 +28,18 @@ public class BuildMojo extends AbstractCordovaMojo {
 
 	private static final String BUILD = "build";
 
-	private static final String BUILD_RESOURCES_ERROR_MESSAGE = "Failed to build resources";
-
 
 
 	public void execute() throws MojoExecutionException {
-		try {
-			final File outputDirectory = getOutputDirectory();
+		final File outputDirectory = getOutputDirectory();
 
-			if (!outputDirectory.exists() && !outputDirectory.mkdirs())
-				throw new MojoExecutionException(CREATE_DIRECTORY_ERROR_MESSAGE + outputDirectory.getAbsolutePath());
+		if (!outputDirectory.exists() && !outputDirectory.mkdirs())
+			throw new MojoExecutionException(CREATE_DIRECTORY_ERROR_MESSAGE + outputDirectory.getAbsolutePath());
 
-			build(outputDirectory);
-		} catch (IOException | InterruptedException e) {
-			throw new MojoExecutionException(BUILD_RESOURCES_ERROR_MESSAGE, e);
-		}
+		build(outputDirectory);
 	}
 
-	private void build(final File outputDirectory) throws IOException, InterruptedException {
-		
+	private void build(final File outputDirectory) throws MojoExecutionException {
 		run(createProcessBuilder(outputDirectory, getCommand(), BUILD), BUILD);
 	}
 }
