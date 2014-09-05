@@ -45,8 +45,8 @@
 			-->
 			<item name="Confluence" href="http://wiki.groupcdg.com/" />
 			<item name="GitHub" href="https://github.com/GroupCDG/cordova-maven-plugin/" />
-			<item name="Jenkins" href="http://ci.groupcdg.com/" />
-			<item name="Sonar" href="http://sonar.groupcdg.com/" />
+			<item name="Jenkins" href="https://ci.groupcdg.com/" />
+			<item name="Sonar" href="https://sonar.groupcdg.com/" />
 			<!--
 			<item name="Maven Central" href="http://repo1.maven.org/maven2/org/groupcdg/maven/" />
 			-->
