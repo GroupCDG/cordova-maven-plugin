@@ -27,7 +27,7 @@
 	<version>0.1.1-SNAPSHOT</version>
 
 	<name>Apache Cordova Maven Plugin</name>
-	<url>http://dev.groupcdg.com/docs/cordova-maven-plugin</url>
+	<url>https://dev.groupcdg.com/docs/cordova-maven-plugin</url>
 	<description>Plugin for Building Cordova Assembly</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -71,7 +71,7 @@
 	
 	<ciManagement>
 		<system>jenkins</system>
-		<url>http://ci.groupcdg.com/</url>
+		<url>https://ci.groupcdg.com/</url>
 	</ciManagement>
 	
 	<!--
@@ -118,17 +118,17 @@
   	<distributionManagement>
   	  	<site>
   	  	  	<id>groupcdg-maven-sites</id>
-  	  	  	<url>scp://http://dev.groupcdg.com/var/www/dev/docs/cordova-maven-plugin/</url>
+  	  	  	<url>scp://dev.groupcdg.com/var/www/dev/docs/cordova-maven-plugin/</url>
   	  	  	<name>cordova-maven-plugin Maven Site</name>
   	  	</site>
 		<repository>
 			<id>groupcdg-nexus-releases</id>
-			<url>http://repo.groupcdg.com/content/repositories/public-releases/</url>
+			<url>https://repo.groupcdg.com/content/repositories/public-releases/</url>
 			<name>Nexus Release Repository</name>
 		</repository>
 		<snapshotRepository>
 			<id>groupcdg-nexus-snapshots</id>
-			<url>http://repo.groupcdg.com/content/repositories/public-snapshots/</url>
+			<url>https://repo.groupcdg.com/content/repositories/public-snapshots/</url>
 			<name>Sonatype Nexus Snapshots</name>
 		</snapshotRepository>
   	</distributionManagement>
@@ -458,29 +458,6 @@
 						</plugin>
 						<plugin>
 							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-checkstyle-plugin</artifactId>
-							<version>2.12.1</version>
-							<configuration>
-								<encoding>${project.build.sourceEncoding}</encoding> 
-								<charset>${project.build.sourceEncoding}</charset>
-								<enableRulesSummary>false</enableRulesSummary>
-								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
-								<configLocation>http://sonar.groupcdg.com/profiles/export?format=checkstyle&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</configLocation>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId> 
-							<artifactId>maven-pmd-plugin</artifactId> 
-							<version>3.2</version> 
-							<configuration>
-								<targetJdk>1.7</targetJdk>
-								<minimumTokens>20</minimumTokens>
-								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
-									<ruleset>http://sonar.groupcdg.com/profiles/export?format=pmd&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</ruleset>
-							</configuration>
-						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
 							<artifactId>maven-project-info-reports-plugin</artifactId>
 							<version>2.7</version>
 							<reportSets>
@@ -507,15 +484,6 @@
 								<showSuccess>true</showSuccess>
 							</configuration>
 						</plugin>
-						<plugin>
-							<groupId>org.apache.maven.plugins</groupId>
-							<artifactId>maven-failsafe-report-plugin</artifactId>
-							<version>2.17</version>
-							<configuration>
-								<xrefLocation>${project.reporting.outputDirectory}/../xref-test</xrefLocation>
-								<showSuccess>true</showSuccess>
-							</configuration>
-						</plugin>
 
 						<!-- <plugin>
 							<groupId>org.codehaus.mojo</groupId>
@@ -525,6 +493,8 @@
 								<comparisonVersion>0.1.0</comparisonVersion>
 							</configuration>
 						</plugin> -->
+						
+						<!-- Fulfilled by Sonar
 						<plugin>
 							<groupId>org.jacoco</groupId>
 							<artifactId>jacoco-maven-plugin</artifactId>
@@ -561,11 +531,9 @@
 									</goals>
 									<configuration>
 										<rules>
-											<!-- implmentation is needed only for Maven 2 -->
 											<rule implementation="org.jacoco.maven.RuleConfiguration">
 												<element>BUNDLE</element>
 												<limits>
-													<!-- implmentation is needed only for Maven 2 -->
 													<limit implementation="org.jacoco.report.check.Limit">
 														<counter>COMPLEXITY</counter>
 														<value>COVEREDRATIO</value>
@@ -581,11 +549,36 @@
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId> 
 							<artifactId>findbugs-maven-plugin</artifactId> 
-							<version>3.0.0</version> <!-- skip 2.5.1, 2.5.2 and 2.5.3 doesn't work -->
+							<version>3.0.0</version>
 							<configuration>
-								 <includeFilterFile>http://sonar.groupcdg.com/profiles/export?format=findbugs&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</includeFilterFile>
+								 <includeFilterFile>https://sonar.groupcdg.com/profiles/export?format=findbugs&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</includeFilterFile>
 							</configuration>
 						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId>
+							<artifactId>maven-checkstyle-plugin</artifactId>
+							<version>2.12.1</version>
+							<configuration>
+								<encoding>${project.build.sourceEncoding}</encoding> 
+								<charset>${project.build.sourceEncoding}</charset>
+								<enableRulesSummary>false</enableRulesSummary>
+								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
+								<configLocation>https://sonar.groupcdg.com/profiles/export?format=checkstyle&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</configLocation>
+							</configuration>
+						</plugin>
+						<plugin>
+							<groupId>org.apache.maven.plugins</groupId> 
+							<artifactId>maven-pmd-plugin</artifactId> 
+							<version>3.2</version> 
+							<configuration>
+								<targetJdk>1.7</targetJdk>
+								<minimumTokens>20</minimumTokens>
+								<xrefLocation>${project.reporting.outputDirectory}/../xref</xrefLocation>
+									<ruleset>https://sonar.groupcdg.com/profiles/export?format=pmd&amp;language=java&amp;name=Sonar%2520way%2520with%2520Findbugs</ruleset>
+							</configuration>
+						</plugin>
+						-->
+						
 						<plugin>
 							<groupId>org.codehaus.mojo</groupId>
 							<artifactId>jdepend-maven-plugin</artifactId>

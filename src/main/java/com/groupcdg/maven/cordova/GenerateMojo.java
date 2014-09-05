@@ -95,12 +95,12 @@ public class GenerateMojo extends AbstractCordovaMojo {
 	}
 
 	private IOFileFilter createFilter(final FileSet fileSet) {
-		List<IOFileFilter> includes = new ArrayList<IOFileFilter>() {{
-			for(String inc : fileSet.getIncludes()) add(new WildcardFileFilter(inc));
-		}};
-		List<IOFileFilter> excludes = new ArrayList<IOFileFilter>() {{
-			for(String ex : fileSet.getExcludes()) add(new WildcardFileFilter(ex));
-		}};
+		List<IOFileFilter> includes = new ArrayList<IOFileFilter>();
+		for(String inc : fileSet.getIncludes()) { includes.add(new WildcardFileFilter(inc)); }
+		
+		List<IOFileFilter> excludes = new ArrayList<IOFileFilter>();
+		for(String ex : fileSet.getExcludes()) { excludes.add(new WildcardFileFilter(ex)); }
+
 		IOFileFilter include = includes.isEmpty() ? trueFileFilter()
 				: or(directoryFileFilter(), or(includes.toArray(new IOFileFilter[includes.size()])));
 		return excludes.isEmpty() ? include

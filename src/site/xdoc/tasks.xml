@@ -28,7 +28,7 @@
 
 		<section name="Cordova-maven-plugin Tasks outstanding">
 			<ul>
-			<!-- <li></li> -->
+				<li></li>
 			</ul>
 			<p>This project will continue to evolve to provide functionality found useful for building Cordova assemblies</p>
 			<p>Contact the mailing lists for more details or to help.</p>
