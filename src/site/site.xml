@@ -40,10 +40,11 @@
 		<menu ref="modules" />
 
 		<menu name="Development">
-			<!-- <item name="Mailing lists" href="mail-lists.html" />
-			<item name="Jira" href="https://project.groupcdg.com/browse/OMPC/" />
+			<!-- 
+			<item name="Mailing lists" href="mail-lists.html" />
 			-->
-			<item name="Confluence" href="http://wiki.groupcdg.com/" />
+			<item name="Jira" href="https://project.groupcdg.com/browse/OMPC/" />
+			<item name="Confluence" href="https://wiki.groupcdg.com/" />
 			<item name="GitHub" href="https://github.com/GroupCDG/cordova-maven-plugin/" />
 			<item name="Jenkins" href="https://ci.groupcdg.com/" />
 			<item name="Sonar" href="https://sonar.groupcdg.com/" />
