@@ -27,7 +27,7 @@
 	<version>0.1.1-SNAPSHOT</version>
 
 	<name>Apache Cordova Maven Plugin</name>
-	<url>https://dev.groupcdg.com/docs/cordova-maven-plugin</url>
+	<url>https://dev.groupcdg.com/public/sites/cordova-maven-plugin</url>
 	<description>Plugin for Building Cordova Assembly</description>
 	<inceptionYear>2014</inceptionYear>
 
@@ -118,7 +118,7 @@
   	<distributionManagement>
   	  	<site>
   	  	  	<id>groupcdg-maven-sites</id>
-  	  	  	<url>scp://dev.groupcdg.com/var/www/dev/docs/cordova-maven-plugin/</url>
+  	  	  	<url>scp://dev.groupcdg.com/var/www/dev/public/sites/cordova-maven-plugin/</url>
   	  	  	<name>cordova-maven-plugin Maven Site</name>
   	  	</site>
 		<repository>
