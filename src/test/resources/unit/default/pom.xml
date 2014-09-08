@@ -18,6 +18,7 @@
 				<configuration>
 					<platforms>
 						<platform>ios</platform>
+						<platform>wp8</platform>
 					</platforms>
 				</configuration>
 			</plugin>

@@ -40,6 +40,6 @@ public class BuildMojo extends AbstractCordovaMojo {
 	}
 
 	private void build(final File outputDirectory) throws MojoExecutionException {
-		run(createProcessBuilder(outputDirectory, getCommand(), BUILD), BUILD);
+		run(new ProcessBuilder(OS.system().cordovaCommand(BUILD)).directory(outputDirectory), BUILD);
 	}
 }

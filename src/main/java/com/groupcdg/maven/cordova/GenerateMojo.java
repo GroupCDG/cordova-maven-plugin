@@ -78,20 +78,22 @@ public class GenerateMojo extends AbstractCordovaMojo {
 	}
 
 	private void create(final File outputDirectory, final File resourcesDirectory) throws MojoExecutionException {
-		run(createProcessBuilder(getCommand(), CREATE, outputDirectory.getAbsolutePath(),
+		run(new ProcessBuilder(OS.system().cordovaCommand(CREATE, outputDirectory.getAbsolutePath(),
 				getProject().getGroupId() + '.' + getProject().getArtifactId(),
-				getEscapedName(),
-				"--src=" + resourcesDirectory.getAbsolutePath()), GENERATE);
+				getEscapedName(), "--src=" + resourcesDirectory.getAbsolutePath())), GENERATE);
 	}
 
 	private void addPlatforms(final File outputDirectory) throws MojoExecutionException {
-		for(String platform : getPlatforms())
-			run(createProcessBuilder(outputDirectory, getCommand(), PLATFORM, ADD, platform), GENERATE);
+		final OS system = OS.system();
+		for(String platform : system.platforms(getPlatforms()))
+			run(new ProcessBuilder(system.cordovaCommand(PLATFORM, ADD, platform)).directory(outputDirectory), GENERATE);
 	}
 
 	private void addPlugins(final File outputDirectory) throws MojoExecutionException {
-		for(String plugin : getPlugins())
-			run(createProcessBuilder(outputDirectory, getCommand(), PLUGIN, ADD, plugin), GENERATE);
+		final OS system = OS.system();
+		for(String plugin : getPlugins()) {
+			run(new ProcessBuilder(system.cordovaCommand(PLUGIN, ADD, plugin)).directory(outputDirectory), GENERATE);
+		}
 	}
 
 	private IOFileFilter createFilter(final FileSet fileSet) {

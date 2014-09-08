@@ -24,37 +24,48 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	protected static final String CREATE_DIRECTORY_ERROR_MESSAGE = "Could not create directory ";
 
 
-	protected static final ProcessBuilder createProcessBuilder(File directory, String ... commands) {
-		return createProcessBuilder(commands).directory(directory);
-	}
+	protected static enum OS {
+		linux("Linux", Collections.singletonList("cordova"),
+				"amazon-fireos", "android", "blackberry10", "firefoxos"),
+		osx("Mac", Collections.singletonList("cordova"),
+				"ios", "amazon-fireos", "android", "blackberry10", "firefoxos"),
+		win32("Windows", Arrays.asList("cmd", "/c", "cordova"),
+				"amazon-fireos", "android", "blackberry10", "wp8", "windows8", "firefoxos");
 
-	protected static final ProcessBuilder createProcessBuilder(String ... commands) {
-		final ProcessBuilder pb;
-
-		if (System.getProperty("os.name").startsWith("Windows")) {
-			String[] windowsCommands = new String[commands.length + 2];
-			windowsCommands[0] = "cmd";
-			windowsCommands[1] = "/c";
-			System.arraycopy(commands, 0, windowsCommands, 2, commands.length);
-			pb = new ProcessBuilder(windowsCommands);
-		} else {
-			pb = new ProcessBuilder(commands);
-		}
-		Map<String, String> env = pb.environment();
-		if (System.getenv() != null)  {
-			env.putAll(System.getenv());
+		public static OS system() throws MojoExecutionException {
+			final String name = System.getProperty("os.name");
+			for(OS os : values()) if(name.startsWith(os.key)) return os;
+			throw new MojoExecutionException("Unsupported operating system: " + name);
 		}
 
-		return pb;
+		private final String key;
+		private final List<String> cordova;
+		private final List<String> platforms;
+
+		private OS(String key, List<String> cordova, String... platforms) {
+			this.key = key;
+			this.cordova = cordova;
+			this.platforms = Arrays.asList(platforms);
+		}
+
+		public List<String> cordovaCommand(String... parameters) {
+			List<String> command = new ArrayList<>(cordova);
+			command.addAll(Arrays.asList(parameters));
+			return command;
+		}
+
+		public List<String> platforms(List<String> configured) {
+			List<String> selected = new ArrayList<>(platforms);
+			if(configured != null && !configured.isEmpty()) selected.retainAll(configured);
+			return selected;
+		}
 	}
 
 
@@ -77,9 +88,6 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	@Parameter(property = "project", defaultValue = "${project}", required = true, readonly = true)
 	private MavenProject project;
 
-	@Parameter(property = "command", defaultValue = "cordova", required = true)
-	private String command;
-
 	@Parameter(property = "name", defaultValue = "${project.name}", required = true)
 	private String name;
 
@@ -89,7 +97,7 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	@Parameter(property = "fileSets")
 	private List<FileSet> fileSets;
 
-	@Parameter(property = "platforms", required = true)
+	@Parameter(property = "platforms")
 	private List<String> platforms;
 
 	@Parameter(property = "plugins")
@@ -97,12 +105,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	private final Log log = getLog();
 
+
+
 	public void setProject(MavenProject project) {
 		this.project = project;
-	}
-
-	public void setCommand(String command) {
-		this.command = command;
 	}
 
 	public void setName(String name) {
@@ -127,10 +133,6 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	protected MavenProject getProject() {
 		return project;
-	}
-
-	protected String getCommand() {
-		return command;
 	}
 
 	protected String getName() {
@@ -172,6 +174,9 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		final File err = new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX);
 
 		try {
+			if (System.getenv() != null)
+				processBuilder.environment().putAll(System.getenv());
+
 			notifyError(logCommand(processBuilder)
 					.redirectOutput(out.exists() ? ProcessBuilder.Redirect.appendTo(out) : ProcessBuilder.Redirect.to(out))
 					.redirectError(err.exists() ? ProcessBuilder.Redirect.appendTo(err) : ProcessBuilder.Redirect.to(err))
