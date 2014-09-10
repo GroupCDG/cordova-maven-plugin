@@ -29,7 +29,7 @@
 
 		<!-- types are add, fix, remove, update (include #issue# attribute to link to Jira issue id -->
 		
-		<release version="0.1.0" date="TBC" description="Initial Release">
+		<release version="0.1.0" date="10-09-2014" description="Initial Release">
 			<action dev="Simon Sparks" type="add">Initial Release</action>
 		</release>
 	</body>
