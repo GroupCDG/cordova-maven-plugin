@@ -21,6 +21,7 @@ import org.apache.maven.model.FileSet;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
+import org.codehaus.plexus.util.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,7 +55,9 @@ public class GenerateMojo extends AbstractCordovaMojo {
 		try {
 			final File outputDirectory = getOutputDirectory();
 
-			if (!outputDirectory.exists() && !outputDirectory.mkdirs())
+			if(outputDirectory.exists())
+				FileUtils.deleteDirectory(outputDirectory);
+			if (!outputDirectory.mkdirs())
 				throw new MojoExecutionException( CREATE_DIRECTORY_ERROR_MESSAGE + outputDirectory.getAbsolutePath());
 
 			create(outputDirectory, prepare());
