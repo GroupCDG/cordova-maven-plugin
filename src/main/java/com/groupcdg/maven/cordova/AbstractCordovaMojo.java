@@ -170,6 +170,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	}
 
 	protected void run(ProcessBuilder processBuilder, String goal) throws MojoExecutionException {
+		run(processBuilder, goal, true);
+	}
+
+	protected void run(ProcessBuilder processBuilder, String goal, boolean failOnError) throws MojoExecutionException {
 		final File out = new File(getLogsDirectory(), goal + OUT_LOG_SUFFIX);
 		final File err = new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX);
 
@@ -180,10 +184,12 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 			notifyError(logCommand(processBuilder)
 					.redirectOutput(out.exists() ? ProcessBuilder.Redirect.appendTo(out) : ProcessBuilder.Redirect.to(out))
 					.redirectError(err.exists() ? ProcessBuilder.Redirect.appendTo(err) : ProcessBuilder.Redirect.to(err))
-					.start().waitFor(), goal);
+					.start().waitFor(), goal, failOnError);
 		} catch (IOException | InterruptedException e) {
-			throw new MojoExecutionException(new StringBuilder("Failed to execute ")
-					.append(goal).append(" goal.").toString(), e);
+			if(failOnError)
+				throw new MojoExecutionException(new StringBuilder("Failed to execute ")
+						.append(goal).append(" goal.").toString(), e);
+			else log.warn("Could not run process: " + processBuilder);
 		}
 	}
 
@@ -204,9 +210,13 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		return processBuilder;
 	}
 
-	private void notifyError(int errorCode, String goal) throws MojoExecutionException {
-		if(errorCode != 0) throw new MojoExecutionException(new StringBuilder("Failed to execute ")
-				.append(goal).append(" goal. Details of the error can be found at ")
-				.append(new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX).getAbsolutePath()).toString());
+	private void notifyError(int errorCode, String goal, boolean failOnError) throws MojoExecutionException {
+		if(errorCode != 0) {
+			String message = new StringBuilder(failOnError ? "Failed to execute " : "An error occurred in the ")
+					.append(goal).append(" goal. Details of the error can be found at ")
+					.append(new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX).getAbsolutePath()).toString();
+			if(failOnError) throw new MojoExecutionException(message);
+			else log.error(message);
+		}
 	}
 }

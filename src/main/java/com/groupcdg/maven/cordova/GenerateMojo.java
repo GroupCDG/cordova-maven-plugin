@@ -88,8 +88,9 @@ public class GenerateMojo extends AbstractCordovaMojo {
 
 	private void addPlatforms(final File outputDirectory) throws MojoExecutionException {
 		final OS system = OS.system();
-		for(String platform : system.platforms(getPlatforms()))
-			run(new ProcessBuilder(system.cordovaCommand(PLATFORM, ADD, platform)).directory(outputDirectory), GENERATE);
+		for(String platform : system.platforms(getPlatforms())) {
+			run(new ProcessBuilder(system.cordovaCommand(PLATFORM, ADD, platform)).directory(outputDirectory), GENERATE, false);
+		}
 	}
 
 	private void addPlugins(final File outputDirectory) throws MojoExecutionException {
