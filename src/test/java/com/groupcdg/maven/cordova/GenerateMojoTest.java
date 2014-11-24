@@ -25,9 +25,7 @@ import java.io.File;
 import java.io.IOException;
 
 import static org.hamcrest.Matchers.containsString;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertThat;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class GenerateMojoTest {
 
@@ -52,31 +50,49 @@ public class GenerateMojoTest {
 	public MojoRule rule = new MojoRule();
 
 
+	private boolean isCordobaInstalled() {
+
+		boolean installed = true;
+		try {
+			new ProcessBuilder(AbstractCordovaMojo.OS.system().cordovaCommand("-v")).start();
+		} catch (Throwable e) {
+			System.out.println("skipping test due to no cordova installation: " + e.getMessage() );
+			installed = false;
+		}
+
+		return installed;
+	}
 
 	@Test
 	public void testDefaultGeneration() throws Exception {
-		File target = new File(DEFAULT_PROJECT, "target");
-		if (target.exists()) FileUtils.cleanDirectory(target);
 
-		rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(DEFAULT_PROJECT));
-		rule.executeMojo(DEFAULT_PROJECT, GENERATE_GOAL);
+		if(isCordobaInstalled()) {
+			File target = new File(DEFAULT_PROJECT, "target");
+			if (target.exists()) FileUtils.cleanDirectory(target);
 
-		assertIncluded(asset(DEFAULT_PROJECT, "index.html"), DEFAULT_ASSET_CONTENT);
-		assertIncluded(asset(DEFAULT_PROJECT, "css/style.css"), DEFAULT_ASSET_CONTENT);
+			rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(DEFAULT_PROJECT));
+			rule.executeMojo(DEFAULT_PROJECT, GENERATE_GOAL);
+
+			assertIncluded(asset(DEFAULT_PROJECT, "index.html"), DEFAULT_ASSET_CONTENT);
+			assertIncluded(asset(DEFAULT_PROJECT, "css/style.css"), DEFAULT_ASSET_CONTENT);
+		}
 	}
 
 	@Test
 	public void testCustomResourcesGeneration() throws Exception {
-		File target = new File(CUSTOM_RESOURCES_PROJECT, "target");
-		if (target.exists()) FileUtils.cleanDirectory(target);
 
-		rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(CUSTOM_RESOURCES_PROJECT));
-		rule.executeMojo(CUSTOM_RESOURCES_PROJECT, GENERATE_GOAL);
+		if(isCordobaInstalled()) {
+            File target = new File(CUSTOM_RESOURCES_PROJECT, "target");
+            if (target.exists()) FileUtils.cleanDirectory(target);
 
-		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "index.html"), CUSTOM_ASSET_CONTENT);
-		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "css/style.css"), CUSTOM_ASSET_CONTENT);
-		assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "other.html"), OVERRIDEN_ASSET_CONTENT);
-		assertExcluded(asset(CUSTOM_RESOURCES_PROJECT, "excluded.txt"));
+            rule.configureMojo(new GenerateMojo(), PLUGIN_NAME, pom(CUSTOM_RESOURCES_PROJECT));
+            rule.executeMojo(CUSTOM_RESOURCES_PROJECT, GENERATE_GOAL);
+
+            assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "index.html"), CUSTOM_ASSET_CONTENT);
+            assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "css/style.css"), CUSTOM_ASSET_CONTENT);
+            assertIncluded(asset(CUSTOM_RESOURCES_PROJECT, "other.html"), OVERRIDEN_ASSET_CONTENT);
+            assertExcluded(asset(CUSTOM_RESOURCES_PROJECT, "excluded.txt"));
+        }
 	}
 
 
