@@ -97,6 +97,9 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	@Parameter(property = "fileSets")
 	private List<FileSet> fileSets;
 
+	@Parameter(property = "failOnError")
+	private boolean failOnError = false;
+
 	@Parameter(property = "platforms")
 	private List<String> platforms;
 
@@ -129,6 +132,14 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	public void setPlugins(List<String> plugins) {
 		this.plugins = plugins;
+	}
+
+	public boolean isFailOnError() {
+		return this.failOnError;
+	}
+
+	public void setIsFailOnError(boolean failOnError) {
+		this.failOnError = failOnError;
 	}
 
 	protected MavenProject getProject() {
@@ -170,7 +181,7 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	}
 
 	protected void run(ProcessBuilder processBuilder, String goal) throws MojoExecutionException {
-		run(processBuilder, goal, true);
+		run(processBuilder, goal, failOnError);
 	}
 
 	protected void run(ProcessBuilder processBuilder, String goal, boolean failOnError) throws MojoExecutionException {
