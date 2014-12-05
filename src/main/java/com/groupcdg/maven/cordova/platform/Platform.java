@@ -54,11 +54,11 @@ public abstract class Platform {
 	}
 
 	public static enum PLATFORM {
-		amazonFireos(new XAmazonFireOS()),
+		amazonFireos(new AmazonFireOS()),
 		android(new Android()),
 		blackberry10(new Blackberry10()),
 		firefoxos(new FirefoxOS()),
-		ios(new XIOS()),
+		ios(new IOS()),
 		windows8(new Windows8()),
 		wp8(new Wp8());
 
