@@ -4,7 +4,7 @@ import com.groupcdg.maven.cordova.BuildMojo;
 
 import java.io.File;
 
-public class PlatformAndroid extends Platform {
+public class Android extends Platform {
 
 	@Override
 	protected Icons getIcons(BuildMojo buildMojo) {
