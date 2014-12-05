@@ -4,7 +4,10 @@ import com.groupcdg.maven.cordova.BuildMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 
 import java.io.File;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.EnumSet;
+import java.util.List;
 
 public abstract class Platform {
 
