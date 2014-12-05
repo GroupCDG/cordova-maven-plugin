@@ -1,4 +1,4 @@
 package com.groupcdg.maven.cordova.platform;
 
-public class Firefoxos extends Platform {
+public class FirefoxOS extends Platform {
 }
