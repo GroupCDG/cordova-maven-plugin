@@ -12,16 +12,22 @@ public class Icons {
 
 	public static class Icon {
 		private final String name;
-		private final Integer size;
+		private final int width;
+		private final int height;
 
-		public Icon(String name, Integer size) {
+		public Icon(String name, int size) {
+			this(name, size, size);
+		}
+
+		public Icon(String name, int width, int height) {
 			this.name = name;
-			this.size = size;
+			this.width = width;
+			this.height = height;
 		}
 
 		public void create(BuildMojo buildMojo, File source, File targetDir) throws MojoExecutionException {
 			buildMojo.run(new ProcessBuilder(Arrays.asList("convert", source.getAbsolutePath(),
-							"-resize", "" + size + 'x' + size, "-format", "PNG", "-quality", "1",
+							"-resize", "" + width + 'x' + height, "-format", "PNG", "-quality", "1",
 							new File(targetDir, name).getAbsolutePath())),
 					buildMojo.BUILD, buildMojo.isFailOnError());
 		}
@@ -33,13 +39,7 @@ public class Icons {
 
 	private File targetDir;
 
-	private final List<Icon> icons;
-
-
-
-	public Icons() {
-		icons = new ArrayList<>();
-	}
+	private final List<Icon> icons = new ArrayList<>();
 
 
 
@@ -58,9 +58,13 @@ public class Icons {
 		return this;
 	}
 
+	public Icons addIcon(String name, int width, int height) {
+		icons.add(new Icon(name, width, height));
+		return this;
+	}
 
 	public void create(BuildMojo buildMojo) throws MojoExecutionException {
-		if(source != null  && targetDir != null && source.canRead() && targetDir.isDirectory())
+		if(!icons.isEmpty() && source != null  && targetDir != null && source.canRead() && targetDir.isDirectory())
 			for(Icon icon : icons) icon.create(buildMojo, source, targetDir);
 	}
 }
