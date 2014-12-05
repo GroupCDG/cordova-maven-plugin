@@ -15,18 +15,21 @@
  */
 package com.groupcdg.maven.cordova;
 
+import com.groupcdg.maven.cordova.platform.Platform;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 
 import java.io.File;
 
+import static com.groupcdg.maven.cordova.platform.Platform.OS;
+
 
 @Mojo(name = "build", defaultPhase = LifecyclePhase.PACKAGE)
 public class BuildMojo extends AbstractCordovaMojo {
 
 
-	private static final String BUILD = "build";
+	public static final String BUILD = "build";
 
 
 
@@ -40,6 +43,8 @@ public class BuildMojo extends AbstractCordovaMojo {
 	}
 
 	private void build(final File outputDirectory) throws MojoExecutionException {
-		run(new ProcessBuilder(OS.system().cordovaCommand(BUILD)).directory(outputDirectory), BUILD);
+		final OS system = OS.system();
+		run(new ProcessBuilder(system.cordova(BUILD)).directory(outputDirectory), BUILD);
+		for(Platform platform : system.platforms(getPlatforms())) platform.postBuild(system, this);
 	}
 }

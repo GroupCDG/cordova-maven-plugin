@@ -6,16 +6,16 @@ perform the build.
 
 To install the Cordova Command-Line tool, follow these steps:
 
-1, Download and install Node.js from http://nodejs.org/. 
+1. Download and install Node.js from http://nodejs.org/.
 Following installation, you should be able to invoke node and npm on your command line. 
 If desired, you may optionally use a tool such as nvm or nave to manage your Node.js installation.
 
-2, Download and install a git client, if you don't already have one. 
+2. Download and install a git client, if you don't already have one.
 Following installation, you should be able to invoke git on your command line. Even though you 
 won't be using git manually, the CLI does use it behind-the-scenes to download some assets when 
 creating a new project.
 
-3. Install the cordova module using npm utility of Node.js. The cordova module will automatically 
+3. Install the cordova module using npm utility of Node.js. The cordova module will automatically
 be downloaded by the npm utility.
 
 On OS X and Linux:
@@ -41,3 +41,5 @@ can usually be found at /usr/local/share/npm.
 
 Following installation, you should be able to run cordova on the command line with no arguments and 
 it should print help text.
+
+4. To support icon file generation, download and install imagemagick.
