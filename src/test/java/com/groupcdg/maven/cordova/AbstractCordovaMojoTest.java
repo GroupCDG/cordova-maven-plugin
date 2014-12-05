@@ -21,7 +21,8 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.groupcdg.maven.cordova.platform.Platform.*;
+import static com.groupcdg.maven.cordova.platform.Platform.OS;
+import static com.groupcdg.maven.cordova.platform.Platform.PLATFORM;
 import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 import static org.junit.Assert.assertTrue;
 

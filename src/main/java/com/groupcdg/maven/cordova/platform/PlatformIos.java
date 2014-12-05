@@ -6,7 +6,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import java.io.File;
 import java.util.EnumSet;
 
-public class Ios extends Platform {
+public class PlatformIos extends Platform {
 
 	@Override
 	public void postBuild(OS system, BuildMojo buildMojo) throws MojoExecutionException {
