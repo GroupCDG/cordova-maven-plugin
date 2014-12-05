@@ -24,50 +24,18 @@ import org.apache.maven.project.MavenProject;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+
+
 
 public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	protected static final String CREATE_DIRECTORY_ERROR_MESSAGE = "Could not create directory ";
 
 
-	protected static enum OS {
-		linux("Linux", Collections.singletonList("cordova"),
-				"amazon-fireos", "android", "blackberry10", "firefoxos"),
-		osx("Mac", Collections.singletonList("cordova"),
-				"ios", "amazon-fireos", "android", "blackberry10", "firefoxos"),
-		win32("Windows", Arrays.asList("cmd", "/c", "cordova"),
-				"amazon-fireos", "android", "blackberry10", "wp8", "windows8", "firefoxos");
 
-		public static OS system() throws MojoExecutionException {
-			final String name = System.getProperty("os.name");
-			for(OS os : values()) if(name.startsWith(os.key)) return os;
-			throw new MojoExecutionException("Unsupported operating system: " + name);
-		}
-
-		private final String key;
-		private final List<String> cordova;
-		private final List<String> platforms;
-
-		private OS(String key, List<String> cordova, String... platforms) {
-			this.key = key;
-			this.cordova = cordova;
-			this.platforms = Arrays.asList(platforms);
-		}
-
-		public List<String> cordovaCommand(String... parameters) {
-			List<String> command = new ArrayList<>(cordova);
-			command.addAll(Arrays.asList(parameters));
-			return command;
-		}
-
-		public List<String> platforms(List<String> configured) {
-			List<String> selected = new ArrayList<>(platforms);
-			if(configured != null && !configured.isEmpty()) selected.retainAll(configured);
-			return selected;
-		}
-	}
-
+	private static final String RESOURCES_DIRECTORY = "resources";
 
 	private static final String LOGS_DIRECTORY = "logs";
 
@@ -96,6 +64,9 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	@Parameter(property = "fileSets")
 	private List<FileSet> fileSets;
+
+	@Parameter(property = "icon")
+	private String icon;
 
 	@Parameter(property = "failOnError")
 	private boolean failOnError = false;
@@ -126,6 +97,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		this.fileSets = fileSets;
 	}
 
+	public void setIcon(String icon) {
+		this.icon = icon;
+	}
+
 	public void setPlatforms(List<String> platforms) {
 		this.platforms = platforms;
 	}
@@ -150,15 +125,15 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		return name;
 	}
 
-	protected String getEscapedName() {
+	public String getEscapedName() {
 		return getName().replaceAll("\\s", "_");
 	}
 
-	protected File getOutputDirectory() {
+	public File getOutputDirectory() {
 		return outputDirectory;
 	}
 
-	protected List<FileSet> getFileSets() {
+	List<FileSet> getFileSets() {
 		if(fileSets == null || fileSets.isEmpty()) {
 			FileSet r = new FileSet();
 			r.setDirectory(defaultFileSet);
@@ -167,24 +142,32 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 		return fileSets;
 	}
 
-	protected List<String> getPlatforms() {
+	public String getIcon() {
+		return icon;
+	}
+
+	List<String> getPlatforms() {
 		return platforms;
 	}
 
-	protected List<String> getPlugins() {
+	List<String> getPlugins() {
 		return plugins;
 	}
 
-	protected File getCordovaDirectory() {
+	File getCordovaDirectory() {
 		cordovaDirectory.mkdirs();
 		return cordovaDirectory;
 	}
 
-	protected void run(ProcessBuilder processBuilder, String goal) throws MojoExecutionException {
+	public File getResourcesDirectory() {
+		return new File(getCordovaDirectory(), RESOURCES_DIRECTORY);
+	}
+
+	void run(ProcessBuilder processBuilder, String goal) throws MojoExecutionException {
 		run(processBuilder, goal, failOnError);
 	}
 
-	protected void run(ProcessBuilder processBuilder, String goal, boolean failOnError) throws MojoExecutionException {
+	public void run(ProcessBuilder processBuilder, String goal, boolean failOnError) throws MojoExecutionException {
 		final File out = new File(getLogsDirectory(), goal + OUT_LOG_SUFFIX);
 		final File err = new File(getLogsDirectory(), goal + ERR_LOG_SUFFIX);
 

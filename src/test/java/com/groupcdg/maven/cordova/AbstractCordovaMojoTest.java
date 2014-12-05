@@ -21,7 +21,7 @@ import org.junit.Test;
 import java.util.Arrays;
 import java.util.List;
 
-import static com.groupcdg.maven.cordova.AbstractCordovaMojo.OS;
+import static com.groupcdg.maven.cordova.platform.Platform.*;
 import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 import static org.junit.Assert.assertTrue;
 
@@ -31,11 +31,11 @@ public class AbstractCordovaMojoTest {
 	@Test
 	public void testOSPlatformFilter() {
 		final List<String> configured = Arrays.asList("android", "ios", "wp8", "madeup");
-		assertTrue(isEqualCollection(Arrays.asList("android"), OS.linux.platforms(configured)));
-		assertTrue(isEqualCollection(Arrays.asList("android", "ios"), OS.osx.platforms(configured)));
-		assertTrue(isEqualCollection(Arrays.asList("android", "wp8"), OS.win32.platforms(configured)));
+		assertTrue(isEqualCollection(Arrays.asList(PLATFORM.byLabel("android")), OS.linux.platforms(configured)));
+		assertTrue(isEqualCollection(Arrays.asList(PLATFORM.byLabel("android"), PLATFORM.byLabel("ios")), OS.osx.platforms(configured)));
+		assertTrue(isEqualCollection(Arrays.asList(PLATFORM.byLabel("android"), PLATFORM.byLabel("wp8")), OS.win32.platforms(configured)));
 
 
-		assertTrue(isEqualCollection(Arrays.asList("ios"), OS.osx.platforms(Arrays.asList("ios", "wp8"))));
+		assertTrue(isEqualCollection(Arrays.asList(PLATFORM.byLabel("ios")), OS.osx.platforms(Arrays.asList("ios", "wp8"))));
 	}
 }

@@ -16,6 +16,7 @@
 
 package com.groupcdg.maven.cordova;
 
+import com.groupcdg.maven.cordova.platform.Platform;
 import org.apache.commons.io.FileUtils;
 import org.apache.maven.plugin.testing.MojoRule;
 import org.junit.Rule;
@@ -54,7 +55,7 @@ public class GenerateMojoTest {
 
 		boolean installed = true;
 		try {
-			new ProcessBuilder(AbstractCordovaMojo.OS.system().cordovaCommand("-v")).start();
+			new ProcessBuilder(Platform.OS.system().cordova("-v")).start();
 		} catch (Throwable e) {
 			System.out.println("skipping test due to no cordova installation: " + e.getMessage() );
 			installed = false;

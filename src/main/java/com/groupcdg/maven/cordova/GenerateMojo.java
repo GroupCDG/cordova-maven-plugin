@@ -15,6 +15,7 @@
  */
 package com.groupcdg.maven.cordova;
 
+import com.groupcdg.maven.cordova.platform.Platform;
 import org.apache.commons.io.filefilter.IOFileFilter;
 import org.apache.commons.io.filefilter.WildcardFileFilter;
 import org.apache.maven.model.FileSet;
@@ -28,6 +29,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.groupcdg.maven.cordova.platform.Platform.OS;
 import static org.apache.commons.io.FileUtils.copyDirectory;
 import static org.apache.commons.io.filefilter.FileFilterUtils.*;
 
@@ -39,13 +41,9 @@ public class GenerateMojo extends AbstractCordovaMojo {
 
 	private static final String CREATE = "create";
 
-	private static final String PLATFORM = "platform";
-
 	private static final String PLUGIN = "plugin";
 
 	private static final String ADD = "add";
-
-	private static final String RESOURCES_DIRECTORY = "resources";
 
 	private static final String GENERATE_RESOURCES_ERROR_MESSAGE = "Failed to generate resources";
 
@@ -71,7 +69,7 @@ public class GenerateMojo extends AbstractCordovaMojo {
 
 
 	private File prepare() throws IOException {
-		File resourcesDirectory = new File(getCordovaDirectory(), RESOURCES_DIRECTORY);
+		File resourcesDirectory = getResourcesDirectory();
 		resourcesDirectory.mkdir();
 
 		for(FileSet fileSet : getFileSets())
@@ -81,22 +79,22 @@ public class GenerateMojo extends AbstractCordovaMojo {
 	}
 
 	private void create(final File outputDirectory, final File resourcesDirectory) throws MojoExecutionException {
-		run(new ProcessBuilder(OS.system().cordovaCommand(CREATE, outputDirectory.getAbsolutePath(),
+		run(new ProcessBuilder(OS.system().cordova(CREATE, outputDirectory.getAbsolutePath(),
 				getProject().getGroupId() + '.' + getProject().getArtifactId(),
 				getEscapedName(), "--src=" + resourcesDirectory.getAbsolutePath())), GENERATE);
 	}
 
 	private void addPlatforms(final File outputDirectory) throws MojoExecutionException {
 		final OS system = OS.system();
-		for(String platform : system.platforms(getPlatforms())) {
-			run(new ProcessBuilder(system.cordovaCommand(PLATFORM, ADD, platform)).directory(outputDirectory), GENERATE, false);
+		for(Platform platform : system.platforms(getPlatforms())) {
+			run(new ProcessBuilder(platform.addCommand(system)).directory(outputDirectory), GENERATE, false);
 		}
 	}
 
 	private void addPlugins(final File outputDirectory) throws MojoExecutionException {
 		final OS system = OS.system();
 		for(String plugin : getPlugins()) {
-			run(new ProcessBuilder(system.cordovaCommand(PLUGIN, ADD, plugin)).directory(outputDirectory), GENERATE);
+			run(new ProcessBuilder(system.cordova(PLUGIN, ADD, plugin)).directory(outputDirectory), GENERATE);
 		}
 	}
 
