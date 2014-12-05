@@ -68,6 +68,9 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 	@Parameter(property = "icon")
 	private String icon;
 
+	@Parameter(property = "splash")
+	private String splash;
+
 	@Parameter(property = "failOnError")
 	private boolean failOnError = false;
 
@@ -99,6 +102,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	public void setIcon(String icon) {
 		this.icon = icon;
+	}
+
+	public void setSplash(String splash) {
+		this.splash = splash;
 	}
 
 	public void setPlatforms(List<String> platforms) {
@@ -144,6 +151,10 @@ public abstract class AbstractCordovaMojo extends AbstractMojo {
 
 	public String getIcon() {
 		return icon;
+	}
+
+	public String getSplash() {
+		return splash;
 	}
 
 	List<String> getPlatforms() {

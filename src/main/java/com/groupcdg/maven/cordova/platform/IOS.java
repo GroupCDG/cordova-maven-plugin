@@ -44,4 +44,22 @@ public class IOS extends Platform {
 	protected File getIconsTargetDir(BuildMojo buildMojo) {
 		return new File(buildMojo.getOutputDirectory(), "platforms/ios/" + buildMojo.getEscapedName() + "/Resources/icons/");
 	}
+
+
+	@Override
+	protected Icons getSplashScreens(BuildMojo buildMojo) {
+		return super.getSplashScreens(buildMojo)
+				.addIcon("Default~iphone", 320, 480)
+				.addIcon("Default@2x~iphone.png", 640, 960)
+				.addIcon("Default-568h@2x~iphone", 640, 1136)
+				.addIcon("Default-Portrait@2x~ipad.png", 1536, 2048)
+				.addIcon("Default-Portrait@~ipad.png", 768, 1024)
+				.addIcon("Default-Landscape~ipad", 1024, 768)
+				.addIcon("Default-Landscape@2x~ipad.png", 2048, 1536);
+	}
+
+	@Override
+	protected File getSplashScreensTargetDir(BuildMojo buildMojo) {
+		return new File(buildMojo.getOutputDirectory(), "platforms/ios/" + buildMojo.getEscapedName() + "/Resources/splash/");
+	}
 }

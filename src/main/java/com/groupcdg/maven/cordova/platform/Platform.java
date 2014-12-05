@@ -89,6 +89,7 @@ public abstract class Platform {
 
 	public void postBuild(OS system, BuildMojo buildMojo) throws MojoExecutionException {
 		createIcons(system, buildMojo);
+		createSplashScreens(system, buildMojo);
 	}
 
 
@@ -103,13 +104,26 @@ public abstract class Platform {
 		return icons;
 	}
 
+	protected Icons getSplashScreens(BuildMojo buildMojo) {
+		Icons splashScreens = new Icons().setTargetDir(getSplashScreensTargetDir(buildMojo));
+		if(buildMojo.getIcon() != null) splashScreens.setsource(new File(buildMojo.getResourcesDirectory(), buildMojo.getSplash()));
+		return splashScreens;
+	}
+
 	protected File getIconsTargetDir(BuildMojo buildMojo) {
 		return null;
 	}
 
+	protected File getSplashScreensTargetDir(BuildMojo buildMojo) {
+		return null;
+	}
 
 
 	private void createIcons(OS system, BuildMojo buildMojo) throws MojoExecutionException {
 		getIcons(buildMojo).create(buildMojo);
+	}
+
+	private void createSplashScreens(OS system, BuildMojo buildMojo) throws MojoExecutionException {
+		getSplashScreens(buildMojo).create(buildMojo);
 	}
 }
